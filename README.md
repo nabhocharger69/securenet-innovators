@@ -1,39 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solution Architecture Flowchart</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+<svg fill="none" viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        .container {
+          display: flex;
+          width: 100%;
+          height: 300px;
+          background-color: black;
+          color: white;
+        }
+      </style>
 
-<div class="flowchart">
-    <!-- Flowchart Boxes -->
-    <div class="box start">Start</div>
-    
-    <div class="arrow"></div>
-    <div class="box" id="traffic-generator">Traffic Generator Module</div>
-    
-    <div class="arrow"></div>
-    <div class="box" id="signature-engine">Signature Complexity Engine</div>
-    
-    <div class="arrow"></div>
-    <div class="box" id="ids-ips-dut">IDS/IPS Device Under Test</div>
-    
-    <div class="arrow"></div>
-    <div class="box" id="data-analysis">Data Collection & Analysis Module</div>
-    
-    <div class="arrow"></div>
-    <div class="box" id="visualization-dashboard">Visualization Dashboard</div>
-    
-    <div class="arrow"></div>
-    <div class="box" id="report-generation">Report Generation Module</div>
-    
-    <div class="arrow"></div>
-    <div class="box end">End</div>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
+      <div class="container">
+        <h1>Hi there, my name is Nikola 👋</h1>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
