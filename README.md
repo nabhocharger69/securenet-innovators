@@ -12,15 +12,15 @@ IDS/IPS devices are critical in detecting and preventing security threats but ma
 The tool benchmarks IDS/IPS devices across:
 - **Throughput** - Maximum traffic rate handled without significant packet loss or delay.
 - **Latency** - Delay introduced by the IDS/IPS device, particularly under high traffic.
-- **Detection Accuracy** - Ability to accurately detect both legitimate and malicious traffic, focusing on true and false positives.
+- **Detection Accuracy** - Ability to accurately detect legitimate and malicious traffic, focusing on true and false positives.
 
 ## Key Features
 1. **Traffic Profiles**: Supports various traffic conditions, including regular and attack traffic profiles.
-2. **Signature Complexity**: Analyzes how the complexity of signatures affects IDS/IPS performance.
+2. **Signature Complexity**: Analyze how the complexity of signatures affects IDS/IPS performance.
 3. **Latency and Packet Drop Measurement**: Provides real-time insights on packet drop and latency variations as traffic increases.
 4. **Adaptive Traffic Scaling**: Dynamically adjusts traffic to simulate real-world load spikes for stress testing.
 5. **Machine Learning Analysis**: Uses ML models to predict failure points and optimize IDS/IPS configuration.
-6. **Interactive Visualizations**: Real-time visualizations for throughput, latency, and accuracy, allowing for deeper performance insights.
+6. **Interactive Visualizations**: These are real-time visualizations of throughput, latency, and accuracy, allowing for deeper performance insights.
 
 ## Solution Architecture
 The solution is designed to:
@@ -31,7 +31,7 @@ The solution is designed to:
 - Provide interactive dashboards for visualization of performance metrics.
 
 ## Timeline
-**Expected Delivery Date**: 8th December 2024
+**Expected Delivery Date**: 1st December 2024
 
 ## References
 - [RFC 9411 - Benchmarking Methodology for Network Security Device Performance](https://www.rfc-editor.org/info/rfc9411)
@@ -44,4 +44,4 @@ The solution is designed to:
 
 ---
 
-This tool is inspired by the guidelines from RFC 9411 and aims to provide a robust benchmarking solution for network security devices. We welcome feedback and contributions to enhance IDS/IPS resilience and performance.
+The guidelines from RFC 9411 inspire this tool and aim to provide a robust benchmarking solution for network security devices. We welcome feedback and contributions to enhance IDS/IPS resilience and performance.
