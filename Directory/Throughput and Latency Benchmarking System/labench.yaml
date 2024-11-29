@@ -1,4 +1,4 @@
-RequestRatePerSec: 2
-Duration: 3s
+RequestRatePerSec: 10
+Duration: 10s
 Request:
   URL: https://en.wikipedia.org/wiki/Pirate_radio
