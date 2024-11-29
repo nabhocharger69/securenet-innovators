@@ -35,7 +35,7 @@ The solution is designed to:
 
 ## References
 - [RFC 9411 - Benchmarking Methodology for Network Security Device Performance](https://www.rfc-editor.org/info/rfc9411)
-- Spirent’s resources on benchmarking network security device performance with open standards.
+- [Spirent’s resources on benchmarking network security device performance with open standards](https://www.spirent.com/blogs/benchmarking-network-security-device-performance-with-open-standards)
 
 ## Team
 - **Nabhonil Bhattacharjee**
