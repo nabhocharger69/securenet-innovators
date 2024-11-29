@@ -1,4 +1,4 @@
-RequestRatePerSec: 10
-Duration: 10s
+RequestRatePerSec: 2
+Duration: 3s
 Request:
-  URL: https://en.wikipedia.org/wiki/Pirate_radio
+  URL: https://heritageit.edu/
