@@ -3,10 +3,10 @@
 ## Detailed Information Document uploaded in "RFC Reading & Proposed Solution Submission.docx" file in the repository
 
 ## Project Overview
-This project, developed by Team **SecureNet Innovators**, provides a benchmarking tool for evaluating the performance of Intrusion Detection and Prevention Systems (IDS/IPS) based on key metrics like throughput, latency, and detection accuracy. The solution targets IDS/IPS devices’ performance under varied conditions and uses metrics aligned with the methodologies outlined in [RFC 9411: Benchmarking Methodology for Network Security Device Performance](https://www.rfc-editor.org/info/rfc9411).
+This project, developed by Team **SecureNet Innovators**, provides a benchmarking tool for evaluating the performance of Intrusion Detection and Prevention Systems (IDS/IPS) based on key metrics like throughput, latency, and detection accuracy. The repository also provides an IDS/IPS solution under varied conditions and uses metrics aligned with the methodologies outlined in [RFC 9411: Benchmarking Methodology for Network Security Device Performance](https://www.rfc-editor.org/info/rfc9411).
 
 ## Problem Statement
-IDS/IPS devices are critical in detecting and preventing security threats but may experience performance degradation under certain conditions, such as increased traffic volume, larger packet sizes, or higher signature complexity. This project aims to benchmark IDS/IPS devices, identifying potential bottlenecks and points of failure under high-load scenarios.
+IDS/IPS devices are critical in detecting and preventing security threats. Still, they may experience performance degradation under certain conditions, such as increased traffic volume, larger packet sizes, or higher signature complexity. This project also aims to benchmark custom IDS/IPS devices, identifying potential bottlenecks and points of failure under high-load scenarios.
 
 ## Objectives
 The tool benchmarks IDS/IPS devices across:
@@ -30,6 +30,9 @@ The solution is designed to:
 - Integrate machine learning to identify performance bottlenecks and optimize IDS/IPS configurations.
 - Provide interactive dashboards for visualization of performance metrics.
 
+## Installation Process
+(To be updated...)
+
 ## Timeline
 **Expected Delivery Date**: 1st December 2024
 
@@ -44,4 +47,4 @@ The solution is designed to:
 
 ---
 
-The guidelines from RFC 9411 inspire this tool and aim to provide a robust benchmarking solution for network security devices. We welcome feedback and contributions to enhance IDS/IPS resilience and performance.
+The guidelines from RFC 9411 inspire this tool, which aims to provide a robust benchmarking solution for network security devices. We welcome feedback and contributions to enhance IDS/IPS resilience and performance.
