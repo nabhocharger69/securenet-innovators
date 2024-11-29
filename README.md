@@ -1,6 +1,6 @@
 # IDS/IPS Benchmarking Solution
 
-## Detailed Information Document uploaded in "RFC Reading & Proposed Solution Submission.docx" file in the repository
+## Detailed Information Document uploaded in "securenet-innovators.pdf" file in the repository
 
 ## Project Overview
 This project, developed by Team **SecureNet Innovators**, provides a benchmarking tool for evaluating the performance of Intrusion Detection and Prevention Systems (IDS/IPS) based on key metrics like throughput, latency, and detection accuracy. The repository also provides an IDS/IPS solution under varied conditions and uses metrics aligned with the methodologies outlined in [RFC 9411: Benchmarking Methodology for Network Security Device Performance](https://www.rfc-editor.org/info/rfc9411).
@@ -46,5 +46,3 @@ The solution is designed to:
 - **Dr. Raja Karmakar**
 
 ---
-
-The guidelines from RFC 9411 inspire this tool, which aims to provide a robust benchmarking solution for network security devices. We welcome feedback and contributions to enhance IDS/IPS resilience and performance.
