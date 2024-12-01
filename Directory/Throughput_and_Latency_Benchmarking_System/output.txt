@@ -1,0 +1,171 @@
+timeStart = 2024-12-01 12:17:27 +0000 UTC
+Protocol: HTTP/1.1
+Clients: 2400
+ExpectedInterval = 5ms, Detected OS timer resolution = 496.1µs
+Using sleeping ticker
+Ticks=2000, TimelyTicks = 2000, MissedTicks = 0, 100.00% good
+Sends=2000, TimelySends = 2000, LateSends   = 0, 100.00% good
+
+Errors:
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65167->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65178->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65184->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65185->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:64529->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65174->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65171->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65168->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65187->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65186->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65176->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65183->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65177->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65181->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65179->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65180->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65175->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65182->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:64517->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:64515->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:64516->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:64883->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+1 = Get "https://www.example.com/": read tcp 192.168.0.159:65173->93.184.215.14:443: wsarecv: An existing connection was forcibly closed by the remote host.
+
+timeEnd   = 2024-12-01 12:19:54 +0000 UTC
+
+{SuccessRate: 98.85%, Throughput: 200.00 req/s, AvgRequestTime: 18459.66 ms, Connections: 2400, RequestRate: 200, RequestTotal: 2000, SuccessTotal: 1977, ErrorTotal: 23, TimeElapsed: 10.0001559s}
+
++------------------------+----------+--------------+
+|         METRIC         | ABSOLUTE | PERCENTAGE % |
++------------------------+----------+--------------+
+| Total Requests         |     2000 |              |
+| Successful Requests    |     1977 |        98.85 |
+| Failed Requests        |       23 |         1.15 |
+| Time Elapsed (sec)     |    10.00 |              |
+| Request Rate (req/sec) |   200.00 |              |
+| Throughput (req/sec)   |   200.00 |              |
+| AvgRequestTime (ms)    | 18459.66 |              |
+| Timely Ticks           |     2000 |       100.00 |
+| Timely Sends           |     2000 |       100.00 |
++------------------------+----------+--------------+
+
++-----------------------------------------+----------+--------------+
+|                  ERROR                  | ABSOLUTE | PERCENTAGE % |
++-----------------------------------------+----------+--------------+
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65171->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65186->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65183->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65177->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65181->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65175->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65178->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65184->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65179->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:64515->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:64883->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65167->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:64529->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65176->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:64516->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65173->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65185->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65168->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65180->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65187->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65182->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:64517->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
+| Get "https://www.example.com/":         |        1 |         0.05 |
+| read tcp                                |          |              |
+| 192.168.0.159:65174->93.184.215.14:443: |          |              |
+| wsarecv: An existing connection was     |          |              |
+| forcibly closed by the remote host.     |          |              |
++-----------------------------------------+----------+--------------+
+

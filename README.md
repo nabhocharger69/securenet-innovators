@@ -20,7 +20,14 @@ The tool benchmarks custom IDS/IPS devices across:
 6. **Interactive Visualizations**: These are real-time visualizations of throughput, latency, and accuracy, allowing for deeper performance insights.
 
 ## Installation Process
-(To be updated...)
+Clone the repository:
+
+```commandline
+git clone https://github.com/indiainternetfoundation/securenet-innovators.git
+cd securenet-innovators
+```
+
+See individual instructions for each part in the Directory folder.
 
 ## Timeline
 **Expected Delivery Date**: 1st December 2024
