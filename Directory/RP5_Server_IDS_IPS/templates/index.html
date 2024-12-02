@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Analytics</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .stats, .logs {
+            margin-top: 20px;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Traffic Analytics Dashboard</h1>
+        <div class="stats">
+            <h2>Summary</h2>
+            <p>Total Requests: <span id="totalRequests">Loading...</span></p>
+            <p>Average Response Time: <span id="avgResponseTime">Loading...</span></p>
+            <h2>Endpoint Stats</h2>
+            <canvas id="endpointChart"></canvas>
+        </div>
+        <div class="logs">
+            <h2>Detailed Logs</h2>
+            <table border="1" width="100%">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Endpoint</th>
+                        <th>Method</th>
+                        <th>Response Time</th>
+                    </tr>
+                </thead>
+                <tbody id="logTable">
+                    <tr><td colspan="4">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const updateAnalytics = async () => {
+            try {
+                const response = await fetch('/analytics');
+                const data = await response.json();
+
+                // Update stats
+                document.getElementById('totalRequests').textContent = data.total_requests;
+                document.getElementById('avgResponseTime').textContent = data.average_response_time;
+
+                // Update chart
+                const ctx = document.getElementById('endpointChart').getContext('2d');
+                const labels = Object.keys(data.endpoint_stats);
+                const values = Object.values(data.endpoint_stats);
+                const chart = Chart.getChart("endpointChart");
+                if (chart) chart.destroy();
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Requests per Endpoint',
+                            data: values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    }
+                });
+
+                // Update logs
+                const logTable = document.getElementById('logTable');
+                logTable.innerHTML = '';
+                data.detailed_logs.forEach(log => {
+                    const row = `<tr>
+                        <td>${log.timestamp}</td>
+                        <td>${log.endpoint}</td>
+                        <td>${log.method}</td>
+                        <td>${log.response_time}</td>
+                    </tr>`;
+                    logTable.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Error fetching analytics:', error);
+            }
+        };
+
+        // Initial load and periodic updates
+        updateAnalytics();
+        setInterval(updateAnalytics, 30000);
+    </script>
+</body>
+</html>
