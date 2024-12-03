@@ -1,79 +1,69 @@
-from flask import Flask, request, jsonify, render_template
+import psutil
 import time
 import threading
+from flask import Flask, request, jsonify, render_template, send_file
 
 app = Flask(__name__)
 
-# Global variables for traffic data
-traffic_data = {
-    "total_requests": 0,
-    "endpoint_stats": {},
-    "response_times": [],
-    "detailed_logs": [],
-}
+# File to store traffic logs
+LOG_FILE = "traffic_logs.txt"
 
-lock = threading.Lock()
+# Global variable to store logs for displaying on the home page
+traffic_logs = []
 
 
-@app.before_request
-def before_request():
-    """Log the start time of the request."""
-    request.start_time = time.time()
+def log_network_traffic():
+    """Continuously log incoming and outgoing traffic system-wide."""
+    with open(LOG_FILE, "a") as f:
+        while True:
+            # Get network traffic stats
+            net_io = psutil.net_io_counters()
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            log_entry = (
+                f"{timestamp} - Bytes Sent: {net_io.bytes_sent}, "
+                f"Bytes Received: {net_io.bytes_recv}\n"
+            )
+            f.write(log_entry)
+            f.flush()  # Ensure immediate write to file
+            time.sleep(1)  # Log every second
+
+
+@app.route('/')
+def index():
+    """Render the home page."""
+    return render_template('index.html')
+
+
+@app.route('/api/traffic')
+def get_traffic_logs():
+    """Provide traffic logs for the frontend."""
+    return jsonify({"traffic_logs": traffic_logs})
+
+
+@app.route('/download_logs')
+def download_logs():
+    """Download the traffic log file."""
+    return send_file(LOG_FILE, as_attachment=True)
 
 
 @app.after_request
-def after_request(response):
-    """Log request details and calculate response time."""
-    response_time = time.time() - request.start_time
-    with lock:
-        traffic_data["total_requests"] += 1
-        traffic_data["response_times"].append(response_time)
-        endpoint = request.endpoint
-        method = request.method
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-
-        # Update endpoint stats
-        if endpoint in traffic_data["endpoint_stats"]:
-            traffic_data["endpoint_stats"][endpoint] += 1
-        else:
-            traffic_data["endpoint_stats"][endpoint] = 1
-
-        # Log detailed request
-        traffic_data["detailed_logs"].append({
-            "timestamp": timestamp,
-            "endpoint": endpoint,
-            "method": method,
-            "response_time": f"{response_time:.2f} seconds"
-        })
-
-        # Limit logs to the last 50 entries
-        if len(traffic_data["detailed_logs"]) > 50:
-            traffic_data["detailed_logs"].pop(0)
+def log_traffic(response):
+    """Log incoming and outgoing HTTP requests to the home page."""
+    log_entry = {
+        "ip": request.remote_addr,
+        "method": request.method,
+        "path": request.path,
+        "response_status": response.status_code,
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    traffic_logs.append(log_entry)
+    # Limit logs to the last 100 entries for display
+    if len(traffic_logs) > 100:
+        traffic_logs.pop(0)
     return response
 
 
-@app.route("/")
-def home():
-    """Serve the analytics page."""
-    return render_template("index.html")
-
-
-@app.route("/analytics")
-def analytics():
-    """API to fetch traffic analytics."""
-    with lock:
-        avg_response_time = (
-            sum(traffic_data["response_times"]) / len(traffic_data["response_times"])
-            if traffic_data["response_times"]
-            else 0
-        )
-        return jsonify({
-            "total_requests": traffic_data["total_requests"],
-            "average_response_time": f"{avg_response_time:.2f} seconds",
-            "endpoint_stats": traffic_data["endpoint_stats"],
-            "detailed_logs": traffic_data["detailed_logs"],
-        })
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    # Start network traffic logging in a separate thread
+    threading.Thread(target=log_network_traffic, daemon=True).start()
+    app.run(host='0.0.0.0', port=5000)

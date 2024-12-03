@@ -5,7 +5,7 @@
 - Run the batch file.
 ```commandline
 cd Throughput_and_Latency_Benchmarking_System
-run_bench_windows.bat
+run.bat
 ```
 
 - Modify config.yaml to meet your needs, most basic params should be self-explanatory. For the full list of supported parameters look at full_config.yaml.

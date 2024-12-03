@@ -1,4 +1,4 @@
 RequestRatePerSec: 200
 Duration: 10s
 Request:
-  URL: https://www.example.com/
+  URL: http://127.0.0.1:5000
