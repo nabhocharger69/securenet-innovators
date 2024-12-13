@@ -5,7 +5,7 @@ import csv
 from datetime import datetime
 
 # Web server URL
-url = 'http://127.0.0.1:5000'
+url = 'http://127.0.0.1:5000/'
 log_file = 'traffic_log.csv'
 
 # Initialize the log file with headers
