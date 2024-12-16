@@ -1,0 +1,4 @@
+Duration: 10s
+Request:
+  URL: http://10.150.22.144:5000
+RequestRatePerSec: 200

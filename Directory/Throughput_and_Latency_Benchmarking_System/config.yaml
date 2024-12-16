@@ -1,5 +1,0 @@
-RequestRatePerSec: 200
-Clients: 1000
-Duration: 10s
-Request:
-  URL: http://127.0.0.1:5000/

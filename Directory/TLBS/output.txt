@@ -1,0 +1,25 @@
+timeStart = 2024-12-16 11:29:42 +0000 UTC
+Protocol: HTTP/1.1
+Clients: 2400
+ExpectedInterval = 5ms, Detected OS timer resolution = 496.9µs
+Using sleeping ticker
+Ticks=2001, TimelyTicks = 2001, MissedTicks = 0, 100.00% good
+Sends=2001, TimelySends = 2001, LateSends   = 0, 100.00% good
+timeEnd   = 2024-12-16 11:30:03 +0000 UTC
+
+{SuccessRate: 100.00%, Throughput: 200.08 req/s, AvgRequestTime: 4.07 ms, Connections: 2400, RequestRate: 200, RequestTotal: 2001, SuccessTotal: 2001, ErrorTotal: 0, TimeElapsed: 10.0010056s}
+
++------------------------+----------+--------------+
+|         METRIC         | ABSOLUTE | PERCENTAGE % |
++------------------------+----------+--------------+
+| Total Requests         |     2001 |              |
+| Successful Requests    |     2001 |       100.00 |
+| Failed Requests        |        0 |         0.00 |
+| Time Elapsed (sec)     |    10.00 |              |
+| Request Rate (req/sec) |   200.00 |              |
+| Throughput (req/sec)   |   200.08 |              |
+| AvgRequestTime (ms)    |     4.07 |              |
+| Timely Ticks           |     2001 |       100.00 |
+| Timely Sends           |     2001 |       100.00 |
++------------------------+----------+--------------+
+

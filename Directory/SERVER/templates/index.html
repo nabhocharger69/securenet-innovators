@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Log Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        main {
+            margin: 20px auto;
+            max-width: 800px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            background-color: #007BFF;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            text-align: center;
+            margin: 20px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .chart-container {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Traffic Log Viewer</h1>
+        <p>Monitor incoming and outgoing traffic details in real-time</p>
+    </header>
+    <main>
+        <h2>Dashboard</h2>
+        <div class="chart-container">
+            <canvas id="throughputChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="latencyChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="cpuChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="memoryChart"></canvas>
+        </div>
+
+        <h2>Recent Traffic Logs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Method</th>
+                    <th>Path</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="traffic-logs">
+                <!-- Traffic logs will be inserted here dynamically -->
+            </tbody>
+        </table>
+        <button onclick="location.href='/download_logs'">Download Logs</button>
+        <button onclick="location.href='https://github.com/indiainternetfoundation/securenet-innovators'">
+            Download and use our Throughput and Latency Benchmarking Tool
+        </button>
+        <button onclick="location.href='https://hdrhistogram.github.io/HdrHistogram/plotFiles.html'">
+            Analyze your res.hgrm file
+        </button>
+    </main>
+    <div class="footer">
+        Powered by Flask, psutil & Gunicorn
+    </div>
+    <script>
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/traffic');
+                const data = await response.json();
+
+                // Update traffic logs
+                const logs = data.traffic_logs;
+                const tableBody = document.getElementById('traffic-logs');
+                tableBody.innerHTML = ''; // Clear existing logs
+
+                logs.forEach(log => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${log.ip}</td>
+                        <td>${log.method}</td>
+                        <td>${log.path}</td>
+                        <td>${log.response_status}</td>
+                        <td>${log.timestamp}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Update charts
+                updateChart(throughputChart, data.throughput.map(t => t.bytes_sent), 'Bytes Sent');
+                updateChart(latencyChart, data.latency, 'Latency (ms)');
+                updateChart(cpuChart, data.cpu_usage, 'CPU Usage (%)');
+                updateChart(memoryChart, data.memory_usage, 'Memory Usage (%)');
+
+                // Show alert if high traffic
+                if (data.high_traffic_alert) {
+                    alert('High traffic detected!');
+                }
+
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        function updateChart(chart, data, label) {
+            chart.data.labels = Array.from({ length: data.length }, (_, i) => i + 1);
+            chart.data.datasets[0].data = data;
+            chart.update();
+        }
+
+        // Initialize Charts
+        const throughputChart = new Chart(document.getElementById('throughputChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Throughput (Bytes Sent)',
+                    data: [],
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Time (s)' } },
+                    y: { title: { display: true, text: 'Bytes' } }
+                }
+            }
+        });
+
+        const latencyChart = new Chart(document.getElementById('latencyChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Latency (ms)',
+                    data: [],
+                    borderColor: 'green',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Time (s)' } },
+                    y: { title: { display: true, text: 'Milliseconds' } }
+                }
+            }
+        });
+
+        const cpuChart = new Chart(document.getElementById('cpuChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CPU Usage (%)',
+                    data: [],
+                    borderColor: 'red',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Time (s)' } },
+                    y: { title: { display: true, text: 'Percentage' } }
+                }
+            }
+        });
+
+        const memoryChart = new Chart(document.getElementById('memoryChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Memory Usage (%)',
+                    data: [],
+                    borderColor: 'purple',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Time (s)' } },
+                    y: { title: { display: true, text: 'Percentage' } }
+                }
+            }
+        });
+
+        // Fetch stats every 2 seconds
+        setInterval(fetchStats, 2000);
+        fetchStats(); // Initial fetch
+    </script>
+</body>
+</html>
