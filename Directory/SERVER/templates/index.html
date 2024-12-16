@@ -1,242 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traffic Log Viewer</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8"> <!-- Character encoding -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design -->
+    <title>Traffic Log Viewer</title> <!-- Page title -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js library -->
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
+            font-family: Arial, sans-serif; /* Font style */
+            margin: 0; /* No margin */
+            padding: 0; /* No padding */
+            background-color: #f4f4f9; /* Background color */
+            color: #333; /* Text color */
         }
         header {
-            background-color: #007BFF;
-            color: white;
-            padding: 1rem;
-            text-align: center;
+            background-color: #007BFF; /* Header background */
+            color: white; /* Header text color */
+            padding: 1rem; /* Header padding */
+            text-align: center; /* Centered text */
         }
         main {
-            margin: 20px auto;
-            max-width: 800px;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            border-radius: 8px;
+            margin: 20px auto; /* Centered main content */
+            max-width: 800px; /* Max width */
+            background: white; /* Main background */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            padding: 20px; /* Padding */
+            border-radius: 8px; /* Rounded corners */
         }
         table {
-            width: 100%;
-            border-collapse: collapse;
+            width: 100%; /* Full width table */
+            border-collapse: collapse; /* Collapse borders */
         }
         th, td {
-            text-align: left;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            text-align: left; /* Left aligned text */
+            padding: 10px; /* Cell padding */
+            border-bottom: 1px solid #ddd; /* Bottom border */
         }
         th {
-            background-color: #f4f4f4;
+            background-color: #f4f4f4; /* Header background */
         }
         button {
-            margin: 10px 0;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            background-color: #007BFF;
-            cursor: pointer;
-            font-size: 1rem;
+            margin: 10px 0; /* Button margin */
+            padding: 10px 20px; /* Button padding */
+            border: none; /* No border */
+            border-radius: 4px; /* Rounded corners */
+            color: white; /* Text color */
+            background-color: #007BFF; /* Button background */
+            cursor: pointer; /* Pointer cursor */
+            font-size: 1rem; /* Font size */
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* Hover effect */
         }
         .footer {
-            text-align: center;
-            margin: 20px;
-            font-size: 0.8em;
-            color: #666;
+            text-align: center; /* Centered footer text */
+            margin: 20px; /* Footer margin */
+            font-size: 0.8em; /* Smaller font size */
+            color: #666; /* Footer text color */
         }
         .chart-container {
-            margin: 20px 0;
+            margin: 20px 0; /* Chart container margin */
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Traffic Log Viewer</h1>
-        <p>Monitor incoming and outgoing traffic details in real-time</p>
+        <h1>Traffic Log Viewer</h1> <!-- Main title -->
+        <p>Monitor incoming and outgoing traffic details in real-time</p> <!-- Subtitle -->
     </header>
     <main>
-        <h2>Dashboard</h2>
+        <h2>Dashboard</h2> <!-- Dashboard title -->
         <div class="chart-container">
-            <canvas id="throughputChart"></canvas>
+            <canvas id="throughputChart"></canvas> <!-- Throughput chart -->
         </div>
         <div class="chart-container">
-            <canvas id="latencyChart"></canvas>
+            <canvas id="latencyChart"></canvas> <!-- Latency chart -->
         </div>
         <div class="chart-container">
-            <canvas id="cpuChart"></canvas>
+            <canvas id="cpuChart"></canvas> <!-- CPU usage chart -->
         </div>
         <div class="chart-container">
-            <canvas id="memoryChart"></canvas>
+            <canvas id="memoryChart"></canvas> <!-- Memory usage chart -->
         </div>
 
-        <h2>Recent Traffic Logs</h2>
+        <h2>Recent Traffic Logs</h2> <!-- Traffic logs title -->
         <table>
             <thead>
                 <tr>
-                    <th>IP Address</th>
-                    <th>Method</th>
-                    <th>Path</th>
-                    <th>Status</th>
-                    <th>Timestamp</th>
+                    <th>IP Address</th> <!-- Column for IP Address -->
+                    <th>Method</th> <!-- Column for HTTP Method -->
+                    <th>Path</th> <!-- Column for Request Path -->
+                    <th>Status</th> <!-- Column for Response Status -->
+                    <th>Timestamp</th> <!-- Column for Timestamp -->
                 </tr>
             </thead>
             <tbody id="traffic-logs">
                 <!-- Traffic logs will be inserted here dynamically -->
             </tbody>
         </table>
-        <button onclick="location.href='/download_logs'">Download Logs</button>
+        <button onclick="location.href='/download_logs'">Download Logs</button> <!-- Download logs button -->
         <button onclick="location.href='https://github.com/indiainternetfoundation/securenet-innovators'">
             Download and use our Throughput and Latency Benchmarking Tool
-        </button>
+        </button> <!-- Benchmarking tool button -->
         <button onclick="location.href='https://hdrhistogram.github.io/HdrHistogram/plotFiles.html'">
             Analyze your res.hgrm file
-        </button>
+        </button> <!-- Analyze file button -->
     </main>
     <div class="footer">
-        Powered by Flask, psutil & Gunicorn
+        Powered by Flask, psutil & Gunicorn <!-- Footer text -->
     </div>
     <script>
-        async function fetchStats() {
+        async function fetchStats() { // Fetch traffic stats
             try {
-                const response = await fetch('/api/traffic');
-                const data = await response.json();
+                const response = await fetch('/api/traffic'); // API call
+                const data = await response.json(); // Parse JSON response
 
                 // Update traffic logs
-                const logs = data.traffic_logs;
-                const tableBody = document.getElementById('traffic-logs');
+                const logs = data.traffic_logs; // Get logs
+                const tableBody = document.getElementById('traffic-logs'); // Table body reference
                 tableBody.innerHTML = ''; // Clear existing logs
 
-                logs.forEach(log => {
-                    const row = document.createElement('tr');
+                logs.forEach(log => { // Iterate through logs
+                    const row = document.createElement('tr'); // Create table row
                     row.innerHTML = `
-                        <td>${log.ip}</td>
-                        <td>${log.method}</td>
-                        <td>${log.path}</td>
-                        <td>${log.response_status}</td>
-                        <td>${log.timestamp}</td>
+                        <td>${log.ip}</td> <!-- IP Address -->
+                        <td>${log.method}</td> <!-- HTTP Method -->
+                        <td>${log.path}</td> <!-- Request Path -->
+                        <td>${log.response_status}</td> <!-- Response Status -->
+                        <td>${log.timestamp}</td> <!-- Timestamp -->
                     `;
-                    tableBody.appendChild(row);
+                    tableBody.appendChild(row); // Append row to table
                 });
 
                 // Update charts
-                updateChart(throughputChart, data.throughput.map(t => t.bytes_sent), 'Bytes Sent');
-                updateChart(latencyChart, data.latency, 'Latency (ms)');
-                updateChart(cpuChart, data.cpu_usage, 'CPU Usage (%)');
-                updateChart(memoryChart, data.memory_usage, 'Memory Usage (%)');
+                updateChart(throughputChart, data.throughput.map(t => t.bytes_sent), 'Bytes Sent'); // Throughput chart
+                updateChart(latencyChart, data.latency, 'Latency (ms)'); // Latency chart
+                updateChart(cpuChart, data.cpu_usage, 'CPU Usage (%)'); // CPU usage chart
+                updateChart(memoryChart, data.memory_usage, 'Memory Usage (%)'); // Memory usage chart
 
                 // Show alert if high traffic
-                if (data.high_traffic_alert) {
-                    alert('High traffic detected!');
+                if (data.high_traffic_alert) { // Check for high traffic
+                    alert('High traffic detected!'); // Alert message
                 }
 
             } catch (error) {
-                console.error('Error fetching stats:', error);
+                console.error('Error fetching stats:', error); // Log error
             }
         }
 
-        function updateChart(chart, data, label) {
-            chart.data.labels = Array.from({ length: data.length }, (_, i) => i + 1);
-            chart.data.datasets[0].data = data;
-            chart.update();
+        function updateChart(chart, data, label) { // Update chart data
+            chart.data.labels = Array.from({ length: data.length }, (_, i) => i + 1); // Generate labels
+            chart.data.datasets[0].data = data; // Set data
+            chart.update(); // Refresh chart
         }
 
         // Initialize Charts
-        const throughputChart = new Chart(document.getElementById('throughputChart').getContext('2d'), {
-            type: 'line',
+        const throughputChart = new Chart(document.getElementById('throughputChart').getContext('2d'), { // Throughput chart initialization
+            type: 'line', // Chart type
             data: {
-                labels: [],
+                labels: [], // Empty labels
                 datasets: [{
-                    label: 'Throughput (Bytes Sent)',
-                    data: [],
-                    borderColor: 'blue',
-                    fill: false
+                    label: 'Throughput (Bytes Sent)', // Dataset label
+                    data: [], // Empty data
+                    borderColor: 'blue', // Line color
+                    fill: false // No fill
                 }]
             },
             options: {
-                responsive: true,
+                responsive: true, // Responsive chart
                 scales: {
-                    x: { title: { display: true, text: 'Time (s)' } },
-                    y: { title: { display: true, text: 'Bytes' } }
+                    x: { title: { display: true, text: 'Time (s)' } }, // X-axis title
+                    y: { title: { display: true, text: 'Bytes' } } // Y-axis title
                 }
             }
         });
 
-        const latencyChart = new Chart(document.getElementById('latencyChart').getContext('2d'), {
-            type: 'line',
+        const latencyChart = new Chart(document.getElementById('latencyChart').getContext('2d'), { // Latency chart initialization
+            type: 'line', // Chart type
             data: {
-                labels: [],
+                labels: [], // Empty labels
                 datasets: [{
-                    label: 'Latency (ms)',
-                    data: [],
-                    borderColor: 'green',
-                    fill: false
+                    label: 'Latency (ms)', // Dataset label
+                    data: [], // Empty data
+                    borderColor: 'green', // Line color
+                    fill: false // No fill
                 }]
             },
             options: {
-                responsive: true,
+                responsive: true, // Responsive chart
                 scales: {
-                    x: { title: { display: true, text: 'Time (s)' } },
-                    y: { title: { display: true, text: 'Milliseconds' } }
+                    x: { title: { display: true, text: 'Time (s)' } }, // X-axis title
+                    y: { title: { display: true, text: 'Milliseconds' } } // Y-axis title
                 }
             }
         });
 
-        const cpuChart = new Chart(document.getElementById('cpuChart').getContext('2d'), {
-            type: 'line',
+        const cpuChart = new Chart(document.getElementById('cpuChart').getContext('2d'), { // CPU chart initialization
+            type: 'line', // Chart type
             data: {
-                labels: [],
+                labels: [], // Empty labels
                 datasets: [{
-                    label: 'CPU Usage (%)',
-                    data: [],
-                    borderColor: 'red',
-                    fill: false
+                    label: 'CPU Usage (%)', // Dataset label
+                    data: [], // Empty data
+                    borderColor: 'red', // Line color
+                    fill: false // No fill
                 }]
             },
             options: {
-                responsive: true,
+                responsive: true, // Responsive chart
                 scales: {
-                    x: { title: { display: true, text: 'Time (s)' } },
-                    y: { title: { display: true, text: 'Percentage' } }
+                    x: { title: { display: true, text: 'Time (s)' } }, // X-axis title
+                    y: { title: { display: true, text: 'Percentage' } } // Y-axis title
                 }
             }
         });
 
-        const memoryChart = new Chart(document.getElementById('memoryChart').getContext('2d'), {
-            type: 'line',
+        const memoryChart = new Chart(document.getElementById('memoryChart').getContext('2d'), { // Memory chart initialization
+            type: 'line', // Chart type
             data: {
-                labels: [],
+                labels: [], // Empty labels
                 datasets: [{
-                    label: 'Memory Usage (%)',
-                    data: [],
-                    borderColor: 'purple',
-                    fill: false
+                    label: 'Memory Usage (%)', // Dataset label
+                    data: [], // Empty data
+                    borderColor: 'purple', // Line color
+                    fill: false // No fill
                 }]
             },
             options: {
-                responsive: true,
+                responsive: true, // Responsive chart
                 scales: {
-                    x: { title: { display: true, text: 'Time (s)' } },
-                    y: { title: { display: true, text: 'Percentage' } }
+                    x: { title: { display: true, text: 'Time (s)' } }, // X-axis title
+                    y: { title: { display: true, text: 'Percentage' } } // Y-axis title
                 }
             }
         });
 
         // Fetch stats every 2 seconds
-        setInterval(fetchStats, 2000);
+        setInterval(fetchStats, 2000); // Set interval for fetching stats
         fetchStats(); // Initial fetch
     </script>
 </body>
