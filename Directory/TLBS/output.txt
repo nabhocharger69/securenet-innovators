@@ -1,45 +1,40 @@
-timeStart = 2024-12-17 06:07:16 +0000 UTC
+timeStart = 2024-12-17 11:09:59 +0000 UTC
 Protocol: HTTP/1.1
 Clients: 24
-ExpectedInterval = 500ms, Detected OS timer resolution = 495.9µs
+ExpectedInterval = 500ms, Detected OS timer resolution = 494.7µs
 Using sleeping ticker
 Ticks=7, TimelyTicks = 7, MissedTicks = 0, 100.00% good
 Sends=7, TimelySends = 7, LateSends   = 0, 100.00% good
 
 Errors:
-7 = Get "http://192.168.223.33:5000/": dial tcp 192.168.223.33:5000: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+2 = Get "http://192.168.223.109:5000/": dial tcp 192.168.223.109:5000: connectex: No connection could be made because the target machine actively refused it.
 
-timeEnd   = 2024-12-17 06:07:51 +0000 UTC
+timeEnd   = 2024-12-17 11:10:14 +0000 UTC
 
-{SuccessRate: 0.00%, Throughput: 2.33 req/s, AvgRequestTime: 0.00 ms, Connections: 24, RequestRate: 2, RequestTotal: 7, SuccessTotal: 0, ErrorTotal: 7, TimeElapsed: 3.0005641s}
+{SuccessRate: 71.43%, Throughput: 2.33 req/s, AvgRequestTime: 1556.40 ms, Connections: 24, RequestRate: 2, RequestTotal: 7, SuccessTotal: 5, ErrorTotal: 2, TimeElapsed: 3.0002002s}
 
 +------------------------+----------+--------------+
 |         METRIC         | ABSOLUTE | PERCENTAGE % |
 +------------------------+----------+--------------+
 | Total Requests         |        7 |              |
-| Successful Requests    |        0 |         0.00 |
-| Failed Requests        |        7 |       100.00 |
+| Successful Requests    |        5 |        71.43 |
+| Failed Requests        |        2 |        28.57 |
 | Time Elapsed (sec)     |     3.00 |              |
 | Request Rate (req/sec) |     2.00 |              |
 | Throughput (req/sec)   |     2.33 |              |
-| AvgRequestTime (ms)    |     0.00 |              |
+| AvgRequestTime (ms)    |  1556.40 |              |
 | Timely Ticks           |        7 |       100.00 |
 | Timely Sends           |        7 |       100.00 |
 +------------------------+----------+--------------+
 
-+--------------------------------+----------+--------------+
-|             ERROR              | ABSOLUTE | PERCENTAGE % |
-+--------------------------------+----------+--------------+
-| Get                            |        7 |       100.00 |
-| "http://192.168.223.33:5000/": |          |              |
-| dial tcp 192.168.223.33:5000:  |          |              |
-| connectex: A connection        |          |              |
-| attempt failed because the     |          |              |
-| connected party did not        |          |              |
-| properly respond after a       |          |              |
-| period of time, or established |          |              |
-| connection failed because      |          |              |
-| connected host has failed to   |          |              |
-| respond.                       |          |              |
-+--------------------------------+----------+--------------+
++---------------------------------+----------+--------------+
+|              ERROR              | ABSOLUTE | PERCENTAGE % |
++---------------------------------+----------+--------------+
+| Get                             |        2 |        28.57 |
+| "http://192.168.223.109:5000/": |          |              |
+| dial tcp 192.168.223.109:5000:  |          |              |
+| connectex: No connection could  |          |              |
+| be made because the target      |          |              |
+| machine actively refused it.    |          |              |
++---------------------------------+----------+--------------+
 

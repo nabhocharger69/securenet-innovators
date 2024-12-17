@@ -1,215 +1,208 @@
-import threading
-import requests
-import time
-import csv
-from datetime import datetime
-import random
 import tkinter as tk
 from tkinter import messagebox
-from tkinter import ttk
-
-# Default log file
-LOG_FILE = 'traffic_log.csv'
-
-# Initialize the log file with headers
-with open(LOG_FILE, mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow([
-        "Timestamp", "Method", "Status_Code", "Response_Time", "Requests_Per_Second", "Packet_Size"
-    ])
+import requests
+import threading
+import time
+import random
 
 
-class TrafficSimulator:
-    """Class for simulating HTTP traffic."""
-
-    def __init__(self, url, method, headers, data, params, rps, concurrency, timeout,
-                 burst_size, delay, ttl, max_packet_size, max_data_size, traffic_volume, random_packets=False):
-        self.url = url
-        self.method = method.upper()
-        self.headers = headers
-        self.data = data
-        self.params = params
-        self.rps = rps
-        self.concurrency = concurrency
-        self.timeout = timeout
-        self.burst_size = burst_size
-        self.delay = delay
-        self.ttl = ttl
-        self.max_packet_size = max_packet_size
-        self.max_data_size = max_data_size
-        self.traffic_volume = traffic_volume
-        self.sent_bytes = 0
-        self.request_count = 0
-        self.start_time_window = time.time()
-        self.random_packets = random_packets
-
-    def log_request(self, status_code, response_time, packet_size):
-        current_time = time.time()
-        requests_per_second = self.request_count if current_time - self.start_time_window < 1 else 0
-
-        with open(LOG_FILE, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([
-                datetime.now(),
-                self.method,
-                status_code,
-                response_time,
-                requests_per_second,
-                packet_size
-            ])
-
-        if current_time - self.start_time_window >= 1:
-            self.request_count = 1
-            self.start_time_window = current_time
-        else:
-            self.request_count += 1
-
-    def generate_random_payload(self):
-        data_size = random.randint(1, self.max_data_size)
-        payload = "X" * data_size
-        return payload, data_size
-
-    def send_request(self, randomize=False):
-        if self.sent_bytes >= self.traffic_volume:
-            return
-
-        if randomize:
-            self.url = f"http://example.com/api/{random.randint(1, 100)}"
-            self.method = random.choice(["GET", "POST", "PUT", "DELETE", "PATCH"])
-            self.headers = {"Random-Header": f"Value{random.randint(1, 100)}"}
-            self.data, _ = self.generate_random_payload()
-
-        payload, data_size = self.generate_random_payload()
-        if self.data:
-            payload = self.data[:self.max_data_size]
-
-        start_time = time.time()
-        try:
-            response = requests.request(
-                method=self.method,
-                url=self.url,
-                headers=self.headers,
-                data=payload,
-                params=self.params,
-                timeout=self.timeout
-            )
-            response_time = round(time.time() - start_time, 2)
-            self.log_request(response.status_code, response_time, data_size)
-        except requests.exceptions.RequestException:
-            response_time = round(time.time() - start_time, 2)
-            self.log_request("Failed", response_time, data_size)
-
-        self.sent_bytes += data_size
-
-    def start_simulation(self):
-        def worker():
-            for _ in range(self.burst_size):
-                if self.sent_bytes < self.traffic_volume:
-                    self.send_request()
-
-        def random_packet_worker():
-            while self.sent_bytes < self.traffic_volume:
-                self.send_request(randomize=True)
-                time.sleep(random.uniform(0.5, 3))
-
-        try:
-            if self.random_packets:
-                threading.Thread(target=random_packet_worker).start()
-
-            while self.sent_bytes < self.traffic_volume:
-                threads = [threading.Thread(target=worker) for _ in range(self.concurrency)]
-                for thread in threads:
-                    thread.start()
-                for thread in threads:
-                    thread.join()
-                time.sleep(self.delay)
-        except KeyboardInterrupt:
-            print("\nTraffic simulation stopped.")
-
-
-class TrafficSimulatorGUI:
-    def __init__(self, root):
+class IDSApp:
+    def __init__(self, root, server_url):
         self.root = root
-        self.root.title("HTTP Traffic Simulator")
-        self.root.geometry("1200x600")  # Horizontal rectangle layout
+        self.server_url = server_url
+        self.root.title("Interactive IDS/IPS Logs")
+        self.running = True
+        self.vulnerable_mode = False  # Toggle for vulnerability mode
+        self.high_traffic_logs = []  # Store high traffic logs for file generation
 
-        # Main container
-        main_frame = ttk.Frame(root, padding="10")
-        main_frame.pack(fill=tk.BOTH, expand=True)
+        # Create widgets for the UI
+        self.create_widgets()
 
-        # Title
-        ttk.Label(main_frame, text="HTTP Traffic Simulator", font=("Arial", 18)).grid(row=0, column=0, columnspan=6, pady=10)
+        # Start a background thread for real-time updates
+        self.update_thread = threading.Thread(target=self.update_logs)
+        self.update_thread.daemon = True
+        self.update_thread.start()
 
-        # Inputs
-        self.add_field(main_frame, "Target URL:", "url", "http://example.com", 1)
-        self.add_field(main_frame, "Headers (JSON):", "headers", "{}", 2)
-        self.add_field(main_frame, "Data Payload:", "data", "", 3)
-        self.add_field(main_frame, "Query Params (JSON):", "params", "{}", 4)
+    def create_widgets(self):
+        # Input for server IP address
+        self.ip_frame = tk.Frame(self.root)
+        self.ip_frame.pack(pady=5)
+        tk.Label(self.ip_frame, text="Server IP Address: ").pack(side=tk.LEFT)
+        self.ip_entry = tk.Entry(self.ip_frame, width=20)
+        self.ip_entry.pack(side=tk.LEFT, padx=5)
+        self.ip_entry.insert(0, self.server_url)
 
-        self.add_field(main_frame, "RPS:", "rps", "1", 5, randomize=True)
-        self.add_field(main_frame, "Concurrency:", "concurrency", "1", 6, randomize=True)
-        self.add_field(main_frame, "Timeout:", "timeout", "5", 7, randomize=True)
-        self.add_field(main_frame, "Burst Size:", "burst_size", "10", 8, randomize=True)
-        self.add_field(main_frame, "Delay (s):", "delay", "0", 9, randomize=True)
-        self.add_field(main_frame, "Max Data Size:", "max_data_size", "1000", 10, randomize=True)
-        self.add_field(main_frame, "Traffic Volume:", "traffic_volume", "10000", 11, randomize=True)
+        self.apply_ip_button = tk.Button(self.ip_frame, text="Apply IP", command=self.update_server_url)
+        self.apply_ip_button.pack(side=tk.LEFT, padx=5)
 
-        # Randomized Packets Checkbox
-        self.random_packets_var = tk.BooleanVar()
-        ttk.Checkbutton(main_frame, text="Enable Randomized Packets", variable=self.random_packets_var).grid(row=12, column=0, columnspan=3, pady=10)
+        # Logs display
+        self.log_display = tk.Text(self.root, height=20, width=100)
+        self.log_display.pack(pady=10)
 
-        # Start Button
-        ttk.Button(main_frame, text="Start Simulation", command=self.start_simulation).grid(row=12, column=4, columnspan=2, pady=10)
+        # Metrics
+        self.throughput_label = tk.Label(self.root, text="Throughput: N/A")
+        self.throughput_label.pack(pady=5)
 
-    def add_field(self, frame, label, var_name, default, row, randomize=False):
-        ttk.Label(frame, text=label).grid(row=row, column=0, sticky=tk.W, padx=5)
-        entry = ttk.Entry(frame, width=20)
-        entry.insert(0, default)
-        entry.grid(row=row, column=1, padx=5)
-        setattr(self, f"{var_name}_entry", entry)
+        self.latency_label = tk.Label(self.root, text="Latency (ms): N/A")
+        self.latency_label.pack(pady=5)
 
-        if randomize:
-            ttk.Button(frame, text="Randomize", command=lambda e=entry, v=var_name: self.randomize_input(e, v)).grid(row=row, column=2)
+        self.cpu_usage_label = tk.Label(self.root, text="CPU Usage (%): N/A")
+        self.cpu_usage_label.pack(pady=5)
 
-    def randomize_input(self, entry, var_name):
-        ranges = {
-            "rps": (1, 100),
-            "concurrency": (1, 50),
-            "timeout": (1, 10),
-            "burst_size": (1, 50),
-            "delay": (0, 5),
-            "max_data_size": (100, 2000),
-            "traffic_volume": (1000, 100000)
-        }
-        entry.delete(0, tk.END)
-        entry.insert(0, str(random.randint(*ranges[var_name])))
+        self.memory_usage_label = tk.Label(self.root, text="Memory Usage (%): N/A")
+        self.memory_usage_label.pack(pady=5)
 
-    def start_simulation(self):
+        self.high_traffic_alert_label = tk.Label(self.root, text="High Traffic Alert: N/A", fg="black")
+        self.high_traffic_alert_label.pack(pady=5)
+
+        # Buttons
+        button_frame = tk.Frame(self.root)
+        button_frame.pack(pady=10)
+
+        self.start_button = tk.Button(button_frame, text="Start Monitoring", command=self.start_monitoring)
+        self.start_button.pack(side=tk.LEFT, padx=5)
+
+        self.stop_button = tk.Button(button_frame, text="Stop Monitoring", command=self.stop_monitoring)
+        self.stop_button.pack(side=tk.LEFT, padx=5)
+
+        self.reset_button = tk.Button(button_frame, text="RESET", command=self.reset_settings)
+        self.reset_button.pack(side=tk.LEFT, padx=5)
+
+        self.block_button = tk.Button(button_frame, text="BLOCK Flood Traffic", command=self.block_flood_traffic)
+        self.block_button.pack(side=tk.LEFT, padx=5)
+
+        self.vulnerability_button = tk.Button(button_frame, text="TOGGLE Vulnerability Mode", command=self.toggle_vulnerability)
+        self.vulnerability_button.pack(side=tk.LEFT, padx=5)
+
+    def update_server_url(self):
+        """Update the server URL based on user input."""
+        new_ip = self.ip_entry.get().strip()
+        if new_ip.startswith("http://") or new_ip.startswith("https://"):
+            self.server_url = new_ip
+            self.log_display.insert(tk.END, f"\nServer URL updated to: {self.server_url}\n")
+        else:
+            messagebox.showerror("Invalid IP", "Please enter a valid server IP starting with 'http://' or 'https://'.")
+
+    def fetch_traffic_data(self):
+        """Fetch the traffic data from the Flask server."""
         try:
-            simulator = TrafficSimulator(
-                url=self.url_entry.get(),
-                method="GET",
-                headers=eval(self.headers_entry.get()),
-                data=self.data_entry.get(),
-                params=eval(self.params_entry.get()),
-                rps=int(self.rps_entry.get()),
-                concurrency=int(self.concurrency_entry.get()),
-                timeout=int(self.timeout_entry.get()),
-                burst_size=int(self.burst_size_entry.get()),
-                delay=float(self.delay_entry.get()),
-                ttl=64,
-                max_packet_size=1500,
-                max_data_size=int(self.max_data_size_entry.get()),
-                traffic_volume=int(self.traffic_volume_entry.get()),
-                random_packets=self.random_packets_var.get()
-            )
-            threading.Thread(target=simulator.start_simulation).start()
-            messagebox.showinfo("Info", "Traffic simulation started!")
+            response = requests.get(f"{self.server_url}/api/traffic")
+            if response.status_code == 200:
+                return response.json()
         except Exception as e:
-            messagebox.showerror("Error", str(e))
+            return None
+
+    def update_logs(self):
+        """Continuously update logs and metrics."""
+        while self.running:
+            data = self.fetch_traffic_data()
+
+            if data:
+                traffic_logs = data["traffic_logs"]
+                throughput = data["throughput"]
+                latency = data["latency"]
+                cpu_usage = data["cpu_usage"]
+                memory_usage = data["memory_usage"]
+                high_traffic_alert = False
+
+                # Check for high traffic (>= 100 requests per second)
+                request_count = len(traffic_logs)
+                if request_count >= 100 and not self.vulnerable_mode:
+                    high_traffic_alert = True
+
+                # Update logs
+                self.log_display.delete(1.0, tk.END)
+                for log in traffic_logs:
+                    log_entry = f"{log['timestamp']} - {log['method']} {log['path']} (IP: {log['ip']}) - {log['response_status']}\n"
+                    self.log_display.insert(tk.END, log_entry)
+
+                    # Save high traffic logs
+                    if high_traffic_alert:
+                        self.high_traffic_logs.append(log_entry)
+
+                # Update metrics
+                if throughput:
+                    self.throughput_label.config(text=f"Throughput (Bytes Sent/Received): Sent: {throughput[-1]['bytes_sent']} / Received: {throughput[-1]['bytes_recv']}")
+                if latency:
+                    self.latency_label.config(text=f"Latency (ms): {latency[-1]:.2f}")
+                if cpu_usage:
+                    self.cpu_usage_label.config(text=f"CPU Usage (%): {cpu_usage[-1]:.2f}")
+                if memory_usage:
+                    self.memory_usage_label.config(text=f"Memory Usage (%): {memory_usage[-1]:.2f}")
+
+                # Update high traffic alert status
+                if high_traffic_alert:
+                    self.high_traffic_alert_label.config(text="High Traffic Alert: YES", fg="red")
+                else:
+                    self.high_traffic_alert_label.config(text="High Traffic Alert: NO", fg="black")
+
+            time.sleep(1)  # Update every second
+
+    def block_flood_traffic(self):
+        """Simulate blocking of high traffic sources."""
+        try:
+            response = requests.post(f"{self.server_url}/api/block")
+            if response.status_code == 200:
+                self.log_display.insert(tk.END, "\nFlood traffic successfully blocked!\n")
+            else:
+                self.log_display.insert(tk.END, "\nFailed to block traffic.\n")
+        except Exception as e:
+            self.log_display.insert(tk.END, f"\nError blocking traffic: {e}\n")
+
+    def toggle_vulnerability(self):
+        """Toggle the IDS/IPS vulnerability mode."""
+        self.vulnerable_mode = not self.vulnerable_mode
+        status = "ON" if self.vulnerable_mode else "OFF"
+        self.log_display.insert(tk.END, f"\nVulnerability mode is now {status}.\n")
+
+    def start_monitoring(self):
+        """Start monitoring traffic."""
+        self.running = True
+        if not self.update_thread.is_alive():
+            self.update_thread = threading.Thread(target=self.update_logs)
+            self.update_thread.daemon = True
+            self.update_thread.start()
+
+    def stop_monitoring(self):
+        """Stop monitoring traffic."""
+        self.running = False
+        self.log_display.insert(tk.END, "\nMonitoring stopped.\n")
+
+    def reset_settings(self):
+        """Reset all settings to their default state."""
+        self.log_display.delete(1.0, tk.END)
+        self.throughput_label.config(text="Throughput: N/A")
+        self.latency_label.config(text="Latency (ms): N/A")
+        self.cpu_usage_label.config(text="CPU Usage (%): N/A")
+        self.memory_usage_label.config(text="Memory Usage (%): N/A")
+        self.high_traffic_alert_label.config(text="High Traffic Alert: N/A", fg="black")
+        self.high_traffic_logs = []
+        self.log_display.insert(tk.END, "All settings reset to normal.\n")
+
+    def save_high_traffic_logs(self):
+        """Save high traffic logs to a .log file."""
+        if self.high_traffic_logs:
+            with open("high_traffic_logs.log", "w") as file:
+                file.writelines(self.high_traffic_logs)
+
+    def on_close(self):
+        """Handle the close event."""
+        self.stop_monitoring()
+        self.save_high_traffic_logs()
+        self.root.destroy()
+
+
+def main():
+    # Define the Flask server URL
+    server_url = "http://192.168.223.33:5000/"  # Change this to your Flask server's URL
+
+    root = tk.Tk()
+    app = IDSApp(root, server_url)
+
+    # Close the Tkinter window safely
+    root.protocol("WM_DELETE_WINDOW", app.on_close)
+    root.mainloop()
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = TrafficSimulatorGUI(root)
-    root.mainloop()
+    main()
