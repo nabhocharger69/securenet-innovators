@@ -12,8 +12,8 @@ def load_config():
         return
 
     config_data = {
-        'RequestRatePerSec': 200,
-        'Duration': '10s',
+        'RequestRatePerSec': 2,
+        'Duration': '3s',
         'Request': {
             'URL': url
         }

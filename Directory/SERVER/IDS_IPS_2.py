@@ -3,6 +3,7 @@ from tkinter import messagebox
 import requests
 import threading
 import time
+import random
 
 
 class IDSApp:
@@ -11,6 +12,7 @@ class IDSApp:
         self.server_url = server_url
         self.root.title("Interactive IDS/IPS Logs")
         self.running = True
+        self.vulnerable_mode = False  # Toggle for vulnerability mode
         self.high_traffic_logs = []  # Store high traffic logs for file generation
 
         # Create widgets for the UI
@@ -66,6 +68,12 @@ class IDSApp:
         self.reset_button = tk.Button(button_frame, text="RESET", command=self.reset_settings)
         self.reset_button.pack(side=tk.LEFT, padx=5)
 
+        self.block_button = tk.Button(button_frame, text="BLOCK Flood Traffic", command=self.block_flood_traffic)
+        self.block_button.pack(side=tk.LEFT, padx=5)
+
+        self.vulnerability_button = tk.Button(button_frame, text="TOGGLE Vulnerability Mode", command=self.toggle_vulnerability)
+        self.vulnerability_button.pack(side=tk.LEFT, padx=5)
+
     def update_server_url(self):
         """Update the server URL based on user input."""
         new_ip = self.ip_entry.get().strip()
@@ -99,7 +107,7 @@ class IDSApp:
 
                 # Check for high traffic (>= 100 requests per second)
                 request_count = len(traffic_logs)
-                if request_count >= 100:
+                if request_count >= 100 and not self.vulnerable_mode:
                     high_traffic_alert = True
 
                 # Update logs
@@ -129,6 +137,23 @@ class IDSApp:
                     self.high_traffic_alert_label.config(text="High Traffic Alert: NO", fg="black")
 
             time.sleep(1)  # Update every second
+
+    def block_flood_traffic(self):
+        """Simulate blocking of high traffic sources."""
+        try:
+            response = requests.post(f"{self.server_url}/api/block")
+            if response.status_code == 200:
+                self.log_display.insert(tk.END, "\nFlood traffic successfully blocked!\n")
+            else:
+                self.log_display.insert(tk.END, "\nFailed to block traffic.\n")
+        except Exception as e:
+            self.log_display.insert(tk.END, f"\nError blocking traffic: {e}\n")
+
+    def toggle_vulnerability(self):
+        """Toggle the IDS/IPS vulnerability mode."""
+        self.vulnerable_mode = not self.vulnerable_mode
+        status = "ON" if self.vulnerable_mode else "OFF"
+        self.log_display.insert(tk.END, f"\nVulnerability mode is now {status}.\n")
 
     def start_monitoring(self):
         """Start monitoring traffic."""

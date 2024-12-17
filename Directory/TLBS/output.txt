@@ -1,25 +1,45 @@
-timeStart = 2024-12-16 11:29:42 +0000 UTC
+timeStart = 2024-12-17 06:07:16 +0000 UTC
 Protocol: HTTP/1.1
-Clients: 2400
-ExpectedInterval = 5ms, Detected OS timer resolution = 496.9µs
+Clients: 24
+ExpectedInterval = 500ms, Detected OS timer resolution = 495.9µs
 Using sleeping ticker
-Ticks=2001, TimelyTicks = 2001, MissedTicks = 0, 100.00% good
-Sends=2001, TimelySends = 2001, LateSends   = 0, 100.00% good
-timeEnd   = 2024-12-16 11:30:03 +0000 UTC
+Ticks=7, TimelyTicks = 7, MissedTicks = 0, 100.00% good
+Sends=7, TimelySends = 7, LateSends   = 0, 100.00% good
 
-{SuccessRate: 100.00%, Throughput: 200.08 req/s, AvgRequestTime: 4.07 ms, Connections: 2400, RequestRate: 200, RequestTotal: 2001, SuccessTotal: 2001, ErrorTotal: 0, TimeElapsed: 10.0010056s}
+Errors:
+7 = Get "http://192.168.223.33:5000/": dial tcp 192.168.223.33:5000: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+
+timeEnd   = 2024-12-17 06:07:51 +0000 UTC
+
+{SuccessRate: 0.00%, Throughput: 2.33 req/s, AvgRequestTime: 0.00 ms, Connections: 24, RequestRate: 2, RequestTotal: 7, SuccessTotal: 0, ErrorTotal: 7, TimeElapsed: 3.0005641s}
 
 +------------------------+----------+--------------+
 |         METRIC         | ABSOLUTE | PERCENTAGE % |
 +------------------------+----------+--------------+
-| Total Requests         |     2001 |              |
-| Successful Requests    |     2001 |       100.00 |
-| Failed Requests        |        0 |         0.00 |
-| Time Elapsed (sec)     |    10.00 |              |
-| Request Rate (req/sec) |   200.00 |              |
-| Throughput (req/sec)   |   200.08 |              |
-| AvgRequestTime (ms)    |     4.07 |              |
-| Timely Ticks           |     2001 |       100.00 |
-| Timely Sends           |     2001 |       100.00 |
+| Total Requests         |        7 |              |
+| Successful Requests    |        0 |         0.00 |
+| Failed Requests        |        7 |       100.00 |
+| Time Elapsed (sec)     |     3.00 |              |
+| Request Rate (req/sec) |     2.00 |              |
+| Throughput (req/sec)   |     2.33 |              |
+| AvgRequestTime (ms)    |     0.00 |              |
+| Timely Ticks           |        7 |       100.00 |
+| Timely Sends           |        7 |       100.00 |
 +------------------------+----------+--------------+
+
++--------------------------------+----------+--------------+
+|             ERROR              | ABSOLUTE | PERCENTAGE % |
++--------------------------------+----------+--------------+
+| Get                            |        7 |       100.00 |
+| "http://192.168.223.33:5000/": |          |              |
+| dial tcp 192.168.223.33:5000:  |          |              |
+| connectex: A connection        |          |              |
+| attempt failed because the     |          |              |
+| connected party did not        |          |              |
+| properly respond after a       |          |              |
+| period of time, or established |          |              |
+| connection failed because      |          |              |
+| connected host has failed to   |          |              |
+| respond.                       |          |              |
++--------------------------------+----------+--------------+
 
